@@ -6,6 +6,11 @@ let searchHistory = []; // نگهداری تاریخچه جستجو
 const MAX_SAMPLES = 10;
 const MAX_SEARCH_HISTORY = 5; // حداکثر تعداد جستجوهای ذخیره شده
 
+// متغیرهای مربوط به نصب برنامه
+let deferredPrompt;
+const installButton = document.getElementById('installApp');
+const iOSInstallTip = document.getElementById('iOSInstallTip');
+
 // دریافت المان‌ها
 const modelStatusEl = document.getElementById('modelStatus');
 const modelSelectEl = document.getElementById('modelSelect');
@@ -59,6 +64,36 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // رویدادهای فرم
     setupEventListeners();
+
+    // تشخیص اجرا در حالت standalone (PWA)
+    const isInStandaloneMode = () => 
+        (window.matchMedia('(display-mode: standalone)').matches) || 
+        (window.navigator.standalone) || 
+        document.referrer.includes('android-app://');
+    
+    // تشخیص پلتفرم iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    if (isInStandaloneMode()) {
+        console.log('برنامه در حالت PWA اجرا شده است');
+        
+        // پنهان کردن دکمه نصب و راهنما
+        installButton.style.display = 'none';
+        iOSInstallTip.style.display = 'none';
+    } else {
+        console.log('برنامه در مرورگر اجرا شده است');
+        
+        // نمایش راهنمای iOS اگر در سافاری iOS هستیم
+        if (isIOS) {
+            // در iOS، beforeinstallprompt فراخوانی نمی‌شود، پس راهنما را نمایش می‌دهیم
+            iOSInstallTip.style.display = 'block';
+            
+            // در صورتی که کاربر قبلاً برنامه را نصب کرده باشد، راهنما را پنهان می‌کنیم
+            if (window.navigator.standalone) {
+                iOSInstallTip.style.display = 'none';
+            }
+        }
+    }
 });
 
 // تنظیم گوش‌دهنده‌های رویداد
@@ -1311,4 +1346,58 @@ async function saveAsWord() {
         console.error('خطا در ایجاد فایل Word:', error);
         alert('خطا در ایجاد فایل Word: ' + error.message);
     }
-} 
+}
+
+// کد مربوط به نصب برنامه
+window.addEventListener('beforeinstallprompt', (e) => {
+    // جلوگیری از نمایش خودکار رابط نصب
+    e.preventDefault();
+    
+    // ذخیره رویداد برای استفاده بعدی
+    deferredPrompt = e;
+    
+    // نمایش دکمه نصب
+    installButton.style.display = 'inline-block';
+    
+    console.log('این برنامه قابل نصب است');
+});
+
+// رویداد کلیک دکمه نصب
+installButton.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+        console.log('برنامه قبلاً نصب شده یا قابل نصب نیست');
+        
+        // اگر در Safari iOS هستیم، راهنمایی نصب را نشان بده
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            alert('برای نصب این برنامه در iOS، روی دکمه "اشتراک‌گذاری" در مرورگر ضربه بزنید و گزینه "افزودن به صفحه اصلی" را انتخاب کنید.');
+        }
+        
+        return;
+    }
+    
+    // نمایش رابط نصب
+    deferredPrompt.prompt();
+    
+    // منتظر انتخاب کاربر
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`کاربر ${outcome === 'accepted' ? 'پذیرفت' : 'رد کرد'} نصب را`);
+    
+    // تنظیم مجدد deferredPrompt
+    deferredPrompt = null;
+    
+    // پنهان کردن دکمه نصب
+    installButton.style.display = 'none';
+});
+
+// وقتی برنامه با موفقیت نصب شد
+window.addEventListener('appinstalled', (evt) => {
+    console.log('برنامه با موفقیت نصب شد');
+    
+    // پنهان کردن دکمه نصب و راهنما
+    installButton.style.display = 'none';
+    iOSInstallTip.style.display = 'none';
+    
+    // اعلان به کاربر
+    alert('برنامه با موفقیت نصب شد! می‌توانید آن را از صفحه اصلی دستگاه خود اجرا کنید.');
+}); 

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقاله‌نویس هوشمند</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>مقاله‌نویس هوشمند</h1>
+        <p>با استفاده از هوش مصنوعی و الگوبرداری از مقالات نمونه، مقالات حرفه‌ای تولید کنید</p>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="ai-model-selection">
+                <h2>انتخاب مدل هوش مصنوعی</h2>
+                <div class="model-container">
+                    <div class="model-status" id="modelStatus">در حال بارگذاری مدل‌ها...</div>
+                    <div class="search-container">
+                        <input type="text" id="modelSearch" class="search-input" placeholder="جستجوی مدل...">
+                    </div>
+                    <div class="search-history" id="searchHistory">
+                        <h4>جستجوهای اخیر:</h4>
+                        <div class="history-tags" id="historyTags"></div>
+                    </div>
+                    <div class="select-container">
+                        <select id="modelSelect" class="model-select">
+                            <option value="">-- یک مدل انتخاب کنید --</option>
+                        </select>
+                    </div>
+                    <button id="confirmModel" class="btn primary-btn">تایید مدل</button>
+                    <button id="refreshModels" class="btn secondary-btn">بازخوانی مدل‌ها</button>
+                </div>
+                <div class="api-info">
+                    <p>برای دریافت کلید API به <a href="https://openrouter.ai" target="_blank">سایت OpenRouter</a> مراجعه کنید. بعد از ثبت‌نام، از بخش API Keys یک کلید جدید ایجاد کنید و در این قسمت وارد کنید:</p>
+                    <input type="text" id="apiKey" placeholder="کلید API خود را وارد کنید" class="api-input">
+                    <button id="saveApiKey" class="btn small-btn">ذخیره</button>
+                </div>
+            </section>
+
+            <section class="sample-articles">
+                <h2>بارگذاری نمونه مقالات</h2>
+                <p>تا ۱۰ نمونه مقاله را بارگذاری کنید (فرمت‌های Word و PDF)</p>
+                <div class="upload-container">
+                    <input type="file" id="sampleFiles" multiple accept=".docx,.doc,.pdf" class="file-input">
+                    <label for="sampleFiles" class="file-label">انتخاب فایل‌ها</label>
+                    <div id="filesList" class="files-list">
+                        <p>فایل‌های انتخاب شده: <span id="filesCount">0</span></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="sampleCount">تعداد نمونه‌های مورد استفاده</label>
+                        <input type="number" id="sampleCount" min="1" max="10" value="5" class="number-input">
+                        <small class="hint">حداکثر ۱۰ نمونه</small>
+                    </div>
+                    <div class="progress-container" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="uploadProgressFill"></div>
+                        </div>
+                        <div class="progress-text" id="uploadProgressText">در حال بارگذاری...</div>
+                    </div>
+                    <button id="uploadSamples" class="btn primary-btn">بارگذاری فایل‌ها</button>
+                </div>
+            </section>
+
+            <section class="new-article">
+                <h2>اطلاعات مقاله جدید</h2>
+                <div class="article-info">
+                    <div class="form-group">
+                        <label for="articleTopic">موضوع مقاله</label>
+                        <input type="text" id="articleTopic" placeholder="موضوع مقاله را وارد کنید">
+                    </div>
+                    <div class="form-group">
+                        <label for="articleKeywords">کلمات کلیدی (با کاما جدا کنید)</label>
+                        <input type="text" id="articleKeywords" placeholder="مثال: هوش مصنوعی، یادگیری ماشین، پردازش زبان طبیعی">
+                    </div>
+                    <div class="form-group">
+                        <label>زبان مقاله</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="language" value="fa" checked> فارسی
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="language" value="en"> انگلیسی
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>اندازه مقاله</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="articleSize" value="short" checked> کوتاه
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="articleSize" value="medium"> متوسط
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="articleSize" value="long"> بلند
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="wordCount">تعداد کلمات (اختیاری)</label>
+                        <input type="number" id="wordCount" min="300" max="2000" value="400" class="number-input">
+                        <small class="hint">پیش‌فرض: 400 کلمه</small>
+                    </div>
+                    <button id="generateArticle" class="btn primary-btn">تولید مقاله</button>
+                </div>
+            </section>
+
+            <section id="article-section">
+                <h2>مقاله تولید شده</h2>
+                
+                <div id="generation-progress" class="progress-container" style="display: none;">
+                    <div class="progress-bar">
+                        <div id="generation-progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div id="generation-progress-text" class="progress-text">در حال تولید مقاله...</div>
+                </div>
+                
+                <div id="article-content" class="article-content">
+                    <div class="placeholder">مقاله‌ای تولید نشده است</div>
+                </div>
+                
+                <div class="article-actions">
+                    <button id="copyBtn" class="btn secondary-btn">کپی مقاله</button>
+                    <button id="saveAsWordBtn" class="btn primary-btn">ذخیره به صورت Word</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>مقاله‌نویس هوشمند | قدرت گرفته از هوش مصنوعی</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

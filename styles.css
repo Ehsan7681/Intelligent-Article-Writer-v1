@@ -10,6 +10,72 @@
     font-style: normal;
 }
 
+/* افزودن فونت Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* افزودن آیکون‌های Material Icons */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* متغیرهای رنگ برای حالت روشن */
+:root {
+    --bg-gradient-start: #e8ecf0;
+    --bg-gradient-end: #d0d6dd;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(255, 255, 255, 0.5);
+    --text-color: #333;
+    --text-color-light: #222;
+    --text-color-secondary: #444;
+    --button-primary: linear-gradient(135deg, #4a6fa5, #5d82b8);
+    --button-text: #fff;
+    --button-secondary: rgba(74, 111, 165, 0.3);
+    --button-secondary-text: #333;
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-border: rgba(74, 111, 165, 0.3);
+    --input-text: #333;
+    --placeholder-color: #777;
+    --shadow-color: rgba(0, 0, 0, 0.15);
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --footer-bg: rgba(74, 111, 165, 0.8);
+    --footer-text: #fff;
+    --divider-color: rgba(74, 111, 165, 0.3);
+    --highlight-color: rgba(255, 255, 255, 0.5);
+    --article-bg: rgba(255, 255, 255, 0.85);
+    --article-text: #222;
+    --install-btn-gradient: linear-gradient(135deg, #ffd700, #ffb700);
+    --install-btn-text: #304878;
+    --backdrop-blur: 10px;
+}
+
+/* متغیرهای رنگ برای حالت تاریک */
+.dark-mode {
+    --bg-gradient-start: #1e2028;
+    --bg-gradient-end: #15171c;
+    --card-bg: rgba(35, 39, 47, 0.7);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --text-color: #e1e6ef;
+    --text-color-light: #f8f9fa;
+    --text-color-secondary: rgba(255, 255, 255, 0.9);
+    --button-primary: linear-gradient(135deg, #304878, #3d5c98);
+    --button-text: #fff;
+    --button-secondary: rgba(255, 255, 255, 0.12);
+    --button-secondary-text: #e1e6ef;
+    --input-bg: rgba(35, 39, 47, 0.7);
+    --input-border: rgba(255, 255, 255, 0.15);
+    --input-text: #e1e6ef;
+    --placeholder-color: rgba(255, 255, 255, 0.5);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --header-bg: rgba(25, 28, 35, 0.8);
+    --footer-bg: rgba(25, 28, 35, 0.8);
+    --footer-text: #e1e6ef;
+    --divider-color: rgba(255, 255, 255, 0.1);
+    --highlight-color: rgba(255, 255, 255, 0.05);
+    --article-bg: rgba(35, 39, 47, 0.85);
+    --article-text: #e1e6ef;
+    --install-btn-gradient: linear-gradient(135deg, #d4af37, #c09526);
+    --install-btn-text: #15171c;
+    --backdrop-blur: 10px;
+}
+
 /* استایل برای کنترل مقیاس ویوپورت در موبایل */
 @viewport {
     width: device-width;
@@ -29,31 +95,81 @@ html {
 }
 
 body {
-    font-family: 'Vazir', Tahoma, Arial, sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+    font-family: 'Inter', 'Vazir', Tahoma, Arial, sans-serif;
+    /* تغییر پس‌زمینه به خاکستری ملایم/نقره‌ای */
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    background-attachment: fixed;
+    color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden; /* جلوگیری از اسکرول افقی در موبایل */
     text-size-adjust: 100%; /* جلوگیری از تغییر خودکار سایز فونت */
     -webkit-text-size-adjust: 100%;
+    min-height: 100vh;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* دکمه تغییر حالت روشن/تاریک */
+.theme-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+.theme-toggle-btn .material-icons {
+    font-size: 24px;
+    transition: all 0.3s ease-in-out;
+}
+
+.light-mode .dark-icon,
+.dark-mode .light-icon {
+    display: none;
 }
 
 header {
-    background: linear-gradient(135deg, #4a6baf 0%, #304878 100%);
-    color: #fff;
+    /* استایل Glassmorphism برای هدر */
+    background: var(--header-bg);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    color: var(--text-color);
     text-align: center;
     padding: 2rem 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border-bottom: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 header h1 {
     margin-bottom: 0.5rem;
     font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 5px var(--shadow-color);
 }
 
 header p {
     font-size: 1.1rem;
-    opacity: 0.9;
+    opacity: 0.95;
+    font-weight: 300;
 }
 
 .container {
@@ -63,89 +179,117 @@ header p {
 }
 
 section {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    /* استایل Glassmorphism برای بخش‌ها */
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    border-radius: 20px;
+    box-shadow: 0 4px 15px var(--shadow-color);
     padding: 1.5rem;
     margin-bottom: 2rem;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 h2 {
-    color: #304878;
+    color: var(--text-color-light);
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #eaeaea;
+    border-bottom: 2px solid var(--divider-color);
+    font-weight: 600;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 footer {
-    background-color: #304878;
-    color: #fff;
+    background: var(--footer-bg);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    color: var(--footer-text);
     text-align: center;
     padding: 1.5rem 0;
     margin-top: 2rem;
+    border-top: 1px solid var(--divider-color);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .developer-info {
     margin-top: 0.5rem;
     font-size: 0.9rem;
-    color: #e1e7f5;
+    color: var(--text-color-secondary);
 }
 
 .developer-name {
-    font-weight: bold;
-    color: #fff;
+    font-weight: 600;
+    color: var(--text-color-light);
 }
 
 /* استایل‌های بخش انتخاب مدل */
 .model-container {
-    background-color: #f9fbff;
-    border-radius: 6px;
+    background: var(--highlight-color);
+    border-radius: 16px;
     padding: 1rem;
     margin-bottom: 1rem;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .model-status {
     margin-bottom: 1rem;
     padding: 0.8rem;
-    background-color: #ecf2ff;
-    border-radius: 4px;
+    background: var(--highlight-color);
+    border-radius: 12px;
     font-size: 0.95rem;
+    color: var(--text-color);
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 /* استایل جستجو */
 .search-container {
     margin-bottom: 1rem;
+    position: relative;
 }
 
 .search-input {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
     font-family: inherit;
     font-size: 1rem;
-    background-color: #fff;
-    transition: all 0.2s ease;
+    background: var(--input-bg);
+    color: var(--input-text);
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .search-input:focus {
-    border-color: #4a6baf;
-    box-shadow: 0 0 0 2px rgba(74, 107, 175, 0.1);
+    border-color: var(--input-border);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
     outline: none;
+    background: var(--input-bg);
+}
+
+.search-input::placeholder {
+    color: var(--placeholder-color);
 }
 
 /* استایل تاریخچه جستجو */
 .search-history {
     margin-bottom: 1rem;
-    background-color: #f1f5fd;
+    background: var(--highlight-color);
     padding: 0.8rem;
-    border-radius: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .search-history h4 {
     font-size: 0.9rem;
-    color: #304878;
+    color: var(--text-color);
     margin-bottom: 0.6rem;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
 }
 
 .history-tags {
@@ -155,19 +299,23 @@ footer {
 }
 
 .history-tag {
-    background-color: #e1e7f5;
-    color: #304878;
+    background: var(--highlight-color);
+    color: var(--text-color);
     font-size: 0.85rem;
     padding: 0.3rem 0.7rem;
     border-radius: 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease-in-out;
     display: flex;
     align-items: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid var(--card-border);
 }
 
 .history-tag:hover {
-    background-color: #d1d9e9;
+    background: var(--button-secondary);
+    transform: translateY(-2px);
 }
 
 .history-tag span {
@@ -178,10 +326,11 @@ footer {
     background: none;
     border: none;
     font-size: 0.85rem;
-    color: #304878;
+    color: var(--text-color);
     margin-right: 0.3rem;
     cursor: pointer;
     opacity: 0.7;
+    transition: all 0.3s ease-in-out;
 }
 
 .history-tag button:hover {
@@ -195,56 +344,84 @@ footer {
 .model-select {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
     font-family: inherit;
     font-size: 1rem;
-    background-color: #fff;
-    color: #333;
+    background: var(--input-bg);
+    color: var(--input-text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .model-select:hover, .model-select:focus {
-    border-color: #4a6baf;
-    box-shadow: 0 0 0 2px rgba(74, 107, 175, 0.1);
+    border-color: var(--input-border);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
     outline: none;
+    background: var(--highlight-color);
+}
+
+.model-select option {
+    background-color: #304878;
+    color: #fff;
 }
 
 .api-info {
     margin-top: 1.5rem;
     padding: 1rem;
-    background-color: #f8faff;
-    border-radius: 6px;
-    border-right: 4px solid #a3b9e5;
+    background: var(--highlight-color);
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .api-info p {
     margin-bottom: 1rem;
     font-size: 0.95rem;
+    color: var(--text-color);
+    transition: color 0.3s ease-in-out;
 }
 
 .api-info a {
-    color: #4a6baf;
+    color: var(--text-color);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    border-bottom: 1px dashed var(--input-border);
+    transition: all 0.3s ease-in-out;
+}
+
+.api-info a:hover {
+    border-bottom-color: var(--text-color);
 }
 
 .api-input {
     width: 100%;
     padding: 0.7rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
     margin-bottom: 0.5rem;
     font-family: inherit;
+    background: var(--input-bg);
+    color: var(--input-text);
+    transition: all 0.3s ease-in-out;
+}
+
+.api-input:focus {
+    border-color: var(--input-border);
+    background: var(--highlight-color);
+    outline: none;
 }
 
 /* استایل‌های بخش بارگذاری مقالات */
 .upload-container {
-    background-color: #f9fbff;
-    border-radius: 6px;
+    background: var(--highlight-color);
+    border-radius: 16px;
     padding: 1.5rem;
     text-align: center;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .file-input {
@@ -253,35 +430,43 @@ footer {
 
 .file-label {
     display: inline-block;
-    background-color: #fff;
-    color: #304878;
+    background: var(--highlight-color);
+    color: var(--text-color-light);
     padding: 0.7rem 1.5rem;
-    border: 2px dashed #a3b9e5;
-    border-radius: 4px;
+    border: 2px dashed var(--divider-color);
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease-in-out;
     margin-bottom: 1rem;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .file-label:hover {
-    background-color: #eef4ff;
-    border-color: #304878;
+    background: var(--button-secondary);
+    border-color: var(--input-border);
+    transform: translateY(-2px);
 }
 
 .files-list {
     margin: 1rem 0;
-    background-color: #f1f3f6;
+    background: var(--highlight-color);
     padding: 1rem;
-    border-radius: 4px;
+    border-radius: 12px;
     text-align: right;
     min-height: 60px;
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-/* استایل‌های بخش فرم مقاله جدید */
+/* ادامه استایل‌ها مطابق با حالت‌های روشن و تاریک جدید */
 .article-info {
-    background-color: #f9fbff;
-    border-radius: 6px;
+    background: var(--highlight-color);
+    border-radius: 16px;
     padding: 1.5rem;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .form-group {
@@ -291,17 +476,28 @@ footer {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #304878;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: color 0.3s ease-in-out;
 }
 
 .form-group input[type="text"] {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
     font-family: inherit;
     font-size: 1rem;
+    background: var(--input-bg);
+    color: var(--input-text);
+    transition: all 0.3s ease-in-out;
+}
+
+.form-group input[type="text"]:focus {
+    border-color: var(--input-border);
+    background: var(--highlight-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .radio-group {
@@ -313,6 +509,12 @@ footer {
     display: flex;
     align-items: center;
     cursor: pointer;
+    color: var(--text-color);
+    transition: all 0.3s ease-in-out;
+}
+
+.radio-label:hover {
+    opacity: 0.9;
 }
 
 .radio-label input {
@@ -321,29 +523,33 @@ footer {
 
 /* استایل‌های بخش مقاله تولید شده */
 .article-content {
-    background-color: #fff;
-    border: 1px solid #e1e7f5;
-    border-radius: 8px;
+    background: var(--article-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
     padding: 2.5rem 3rem;
     min-height: 300px;
     margin-bottom: 1rem;
     text-align: justify;
     line-height: 1.8;
     font-size: 1.1rem;
-    color: #2c3e50;
-    font-family: 'Vazir', Tahoma, Arial, sans-serif;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+    color: var(--article-text);
+    font-family: 'Inter', 'Vazir', Tahoma, Arial, sans-serif;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .article-title {
     font-size: 2rem;
-    color: #304878;
+    color: var(--article-text);
     text-align: center;
     margin-bottom: 1.8rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e1e7f5;
-    font-weight: bold;
+    border-bottom: 1px solid var(--divider-color);
+    font-weight: 700;
     line-height: 1.4;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .article-section {
@@ -356,12 +562,13 @@ footer {
 }
 
 .article-section h2 {
-    color: #304878;
+    color: var(--article-text);
     font-size: 1.5rem;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px dashed #e9edf7;
-    font-weight: bold;
+    border-bottom: 1px dashed var(--divider-color);
+    font-weight: 600;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .section-content {
@@ -375,16 +582,18 @@ footer {
     margin-bottom: 1rem;
     text-align: justify;
     line-height: 1.8;
-    color: #2c3e50;
+    color: var(--article-text);
     text-indent: 1.5rem;
+    transition: color 0.3s ease-in-out;
 }
 
 .abstract {
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background-color: #f8faff;
-    border-radius: 6px;
-    border-right: 3px solid #4a6baf;
+    background: var(--highlight-color);
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .abstract h2 {
@@ -402,13 +611,15 @@ footer {
 }
 
 .introduction h2, .conclusion h2, .references h2 {
-    color: #304878;
+    color: var(--text-color-light);
+    transition: color 0.3s ease-in-out;
 }
 
 .references {
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e1e7f5;
+    border-top: 1px solid var(--divider-color);
+    transition: border-color 0.3s ease-in-out;
 }
 
 .references .section-content {
@@ -429,727 +640,120 @@ footer {
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e1e7f5;
+    border-top: 1px solid var(--divider-color);
+    transition: border-color 0.3s ease-in-out;
 }
 
 .article-actions .btn {
     padding: 0.8rem 1.8rem;
     font-size: 1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out;
 }
 
 .article-actions .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-color);
 }
 
 /* استایل دکمه‌ها */
 .btn {
     padding: 0.7rem 1.5rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     cursor: pointer;
     font-family: inherit;
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 4px 10px var(--shadow-color);
 }
 
 .primary-btn {
-    background-color: #304878;
-    color: #fff;
+    background: var(--button-primary);
+    color: var(--button-text);
+    border: 1px solid var(--card-border);
 }
 
 .primary-btn:hover {
-    background-color: #243760;
+    background: var(--button-primary);
+    filter: brightness(1.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-color);
 }
 
 .secondary-btn {
-    background-color: #e1e7f5;
-    color: #304878;
+    background: var(--button-secondary);
+    color: var(--button-secondary-text);
+    border: 1px solid var(--card-border);
 }
 
 .secondary-btn:hover {
-    background-color: #d1d9e9;
+    background: var(--button-secondary);
+    filter: brightness(1.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-color);
 }
 
 .small-btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
-    background-color: #304878;
-    color: #fff;
+    background: var(--button-primary);
+    color: var(--text-color-light);
+    border-radius: 8px;
+}
+
+.small-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow-color);
+    filter: brightness(1.1);
 }
 
 /* استایل نوار پیشرفت */
 .progress-container {
     margin: 1rem 0;
-    background-color: #f8faff;
+    background: var(--highlight-color);
     padding: 1rem;
-    border-radius: 6px;
-    border: 1px solid #e1e7f5;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .progress-bar {
     width: 100%;
     height: 8px;
-    background-color: #e1e7f5;
+    background: var(--input-bg);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 0.5rem;
+    transition: background 0.3s ease-in-out;
 }
 
 .progress-fill {
     width: 0%;
     height: 100%;
-    background-color: #4a6baf;
-    transition: width 0.3s ease;
+    background: var(--button-primary);
+    transition: width 0.3s ease, background 0.3s ease-in-out;
 }
 
 .progress-text {
     text-align: center;
-    color: #304878;
+    color: var(--text-color);
     font-size: 0.9rem;
-}
-
-/* استایل جدید برای نمایش وضعیت گسترش بخش‌ها */
-.progress-container .progress-section {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: #4a6baf;
-    opacity: 0.9;
-    transition: opacity 0.3s ease;
-}
-
-.progress-container .progress-section.active {
-    font-weight: bold;
-    opacity: 1;
-}
-
-.progress-text-details {
-    display: block;
-    font-size: 0.8rem;
-    margin-top: 0.2rem;
-    opacity: 0.8;
-}
-
-/* تغییر رنگ نوار پیشرفت در مرحله گسترش */
-.progress-fill.expanding {
-    background-color: #27ae60;
-}
-
-/* بهینه‌سازی‌های موبایل */
-input, select, textarea, button {
-    font-family: 'Vazir', Tahoma, Arial, sans-serif;
-    font-size: 16px; /* جلوگیری از زوم خودکار در iOS */
-}
-
-button, .btn, [role="button"] {
-    cursor: pointer;
-    touch-action: manipulation; /* بهبود عملکرد لمسی */
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-.upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* پاسخگویی */
-@media (max-width: 1200px) {
-    .container {
-        width: 95%;
-        padding: 0.8rem;
-    }
-    
-    header h1 {
-        font-size: 2.2rem;
-    }
-    
-    header p {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 992px) {
-    html {
-        font-size: 15px;
-    }
-    
-    .container {
-        width: 100%;
-    }
-    
-    header {
-        padding: 1.8rem 1rem;
-    }
-    
-    header h1 {
-        font-size: 2rem;
-    }
-    
-    section {
-        padding: 1.2rem;
-    }
-    
-    .model-select {
-        font-size: 0.9rem;
-        padding: 0.7rem;
-    }
-    
-    .api-info {
-        padding: 0.8rem;
-    }
-    
-    .form-group input[type="text"],
-    .api-input,
-    .search-input {
-        padding: 0.7rem;
-    }
-    
-    .btn {
-        padding: 0.6rem 1.2rem;
-    }
-}
-
-@media (max-width: 768px) {
-    html {
-        font-size: 14px;
-    }
-    
-    header {
-        padding: 1.5rem 0.8rem;
-    }
-    
-    header h1 {
-        font-size: 1.8rem;
-    }
-    
-    header p {
-        font-size: 0.9rem;
-    }
-    
-    .container {
-        padding: 0.6rem;
-    }
-    
-    section {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1.2rem;
-    }
-    
-    .radio-group {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .history-tags {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .article-content {
-        padding: 1.5rem 2rem;
-    }
-    
-    .article-title {
-        font-size: 1.8rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .article-section h2 {
-        font-size: 1.4rem;
-    }
-    
-    .section-content {
-        font-size: 1rem;
-    }
-    
-    .section-content p {
-        text-indent: 1rem;
-    }
-    
-    .abstract {
-        padding: 1rem;
-    }
-    
-    .number-input {
-        font-size: 16px; /* جلوگیری از زوم در موبایل */
-    }
-    
-    .progress-container {
-        padding: 0.8rem;
-    }
-    
-    .progress-text {
-        font-size: 0.85rem;
-    }
-    
-    /* بهینه‌سازی فرم‌ها برای موبایل */
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
-    
-    .form-group label {
-        font-size: 0.95rem;
-    }
-    
-    /* افزایش اندازه ناحیه کلیک‌پذیری */
-    .radio-label {
-        padding: 0.5rem 0;
-    }
-    
-    .file-label {
-        width: 100%;
-        padding: 1rem;
-    }
-    
-    /* بهبود فاصله‌گذاری برای خوانایی بهتر */
-    .search-history {
-        padding: 0.7rem;
-    }
-    
-    .api-info p {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 576px) {
-    html {
-        font-size: 13px;
-    }
-    
-    body {
-        line-height: 1.5;
-    }
-    
-    header {
-        padding: 1.2rem 0.5rem;
-    }
-    
-    header h1 {
-        font-size: 1.6rem;
-        margin-bottom: 0.3rem;
-    }
-    
-    header p {
-        font-size: 0.85rem;
-    }
-    
-    .container {
-        padding: 0.5rem;
-    }
-    
-    section {
-        padding: 0.8rem;
-        margin-bottom: 1.2rem;
-        border-radius: 6px;
-    }
-    
-    h2 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.4rem;
-    }
-    
-    .upload-container, .article-info {
-        padding: 0.8rem;
-    }
-    
-    .search-container {
-        margin-bottom: 0.8rem;
-    }
-    
-    .search-input {
-        padding: 0.7rem;
-    }
-    
-    .search-history {
-        padding: 0.6rem;
-    }
-    
-    .history-tag {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.8rem;
-    }
-    
-    .select-container {
-        margin: 0.8rem 0;
-    }
-    
-    .model-select {
-        padding: 0.7rem 0.5rem;
-    }
-    
-    .api-info {
-        padding: 0.7rem;
-        margin-top: 1rem;
-    }
-    
-    .api-input {
-        padding: 0.6rem;
-    }
-    
-    .file-label {
-        font-size: 0.9rem;
-        padding: 0.8rem;
-    }
-    
-    .files-list {
-        padding: 0.8rem;
-        font-size: 0.9rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1rem;
-    }
-    
-    .form-group label {
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
-    }
-    
-    .form-group input[type="text"] {
-        padding: 0.7rem;
-        font-size: 0.95rem;
-    }
-    
-    .btn {
-        padding: 0.7rem 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .small-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.8rem;
-    }
-    
-    .article-content {
-        padding: 1.2rem 1.5rem;
-    }
-    
-    .article-title {
-        font-size: 1.5rem;
-        margin-bottom: 1.2rem;
-        padding-bottom: 0.8rem;
-    }
-    
-    .article-section h2 {
-        font-size: 1.3rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .section-content {
-        font-size: 0.95rem;
-    }
-    
-    .section-content p {
-        margin-bottom: 0.8rem;
-        text-indent: 0.8rem;
-    }
-    
-    .abstract {
-        padding: 0.8rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .article-actions {
-        flex-direction: column;
-        gap: 0.8rem;
-    }
-    
-    .article-actions .btn {
-        width: 100%;
-    }
-    
-    /* بهبود اندازه دکمه‌ها برای لمس بهتر */
-    .btn {
-        min-height: 44px; /* حداقل ارتفاع برای ناحیه قابل لمس */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .progress-container {
-        padding: 0.7rem;
-    }
-    
-    .progress-bar {
-        height: 6px;
-    }
-    
-    .progress-text {
-        font-size: 0.8rem;
-    }
-    
-    /* افزایش فاصله بین عناصر فرم برای راحتی کاربر */
-    .form-group + .form-group {
-        margin-top: 1.2rem;
-    }
-    
-    .hint {
-        font-size: 0.8rem;
-    }
-}
-
-/* بهینه‌سازی برای موبایل‌های بسیار کوچک */
-@media (max-width: 360px) {
-    html {
-        font-size: 12px;
-    }
-    
-    header h1 {
-        font-size: 1.4rem;
-    }
-    
-    header p {
-        font-size: 0.8rem;
-    }
-    
-    .btn {
-        padding: 0.6rem 0.8rem;
-        font-size: 0.85rem;
-    }
-    
-    .article-title {
-        font-size: 1.3rem;
-    }
-    
-    .article-section h2 {
-        font-size: 1.1rem;
-    }
-    
-    .section-content {
-        font-size: 0.9rem;
-    }
-    
-    .form-group label,
-    .api-info p {
-        font-size: 0.85rem;
-    }
-}
-
-/* بهینه‌سازی برای موبایل با نسبت تصویر متفاوت */
-@media (max-height: 700px) and (max-width: 500px) {
-    header {
-        padding: 1rem 0.5rem;
-    }
-    
-    section {
-        margin-bottom: 1rem;
-    }
-    
-    .form-group {
-        margin-bottom: 0.8rem;
-    }
-}
-
-/* بهینه‌سازی چاپ */
-@media print {
-    body {
-        background-color: #fff;
-    }
-    
-    header, footer, .model-container, .upload-container, .article-info,
-    .article-actions, .btn, .progress-container {
-        display: none;
-    }
-    
-    .container {
-        width: 100%;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .article-content {
-        padding: 0;
-        border: none;
-        box-shadow: none;
-    }
-    
-    .article-section {
-        break-inside: avoid;
-        page-break-inside: avoid;
-        border: none;
-        box-shadow: none;
-    }
-}
-
-/* بهینه‌سازی برای حالت تاریک */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #1a1f2b;
-        color: #e1e6ef;
-    }
-    
-    header {
-        background: linear-gradient(135deg, #304878 0%, #1a2843 100%);
-    }
-    
-    section {
-        background-color: #242a38;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    }
-    
-    h2 {
-        color: #a3b9e5;
-        border-bottom-color: #363c4d;
-    }
-    
-    .model-container, .upload-container, .article-info {
-        background-color: #242a38;
-    }
-    
-    .model-status {
-        background-color: #2a324a;
-    }
-    
-    .search-input, .model-select, .api-input, .form-group input[type="text"], .number-input {
-        background-color: #1a1f2b;
-        border-color: #363c4d;
-        color: #e1e6ef;
-    }
-    
-    .search-input:focus, .model-select:focus, .api-input:focus, 
-    .form-group input[type="text"]:focus, .number-input:focus {
-        border-color: #4a6baf;
-        box-shadow: 0 0 0 2px rgba(74, 107, 175, 0.2);
-    }
-    
-    .search-history {
-        background-color: #2a324a;
-    }
-    
-    .history-tag {
-        background-color: #363c4d;
-        color: #a3b9e5;
-    }
-    
-    .history-tag:hover {
-        background-color: #414861;
-    }
-    
-    .file-label {
-        background-color: #2a324a;
-        color: #a3b9e5;
-        border-color: #4a6baf;
-    }
-    
-    .file-label:hover {
-        background-color: #363c4d;
-    }
-    
-    .files-list {
-        background-color: #1a1f2b;
-    }
-    
-    .article-content {
-        background-color: #242a38;
-        border-color: #363c4d;
-        color: #e1e6ef;
-    }
-    
-    .article-title {
-        color: #a3b9e5;
-        border-bottom-color: #363c4d;
-    }
-    
-    .article-section {
-        background-color: #2a324a;
-    }
-    
-    .article-section h2 {
-        color: #a3b9e5;
-        border-bottom-color: #363c4d;
-    }
-    
-    .section-content p {
-        color: #e1e6ef;
-    }
-    
-    .secondary-btn {
-        background-color: #363c4d;
-        color: #a3b9e5;
-    }
-    
-    .secondary-btn:hover {
-        background-color: #414861;
-    }
-    
-    .progress-container {
-        background-color: #2a324a;
-        border-color: #363c4d;
-    }
-    
-    .progress-bar {
-        background-color: #363c4d;
-    }
-    
-    .progress-text {
-        color: #a3b9e5;
-    }
-    
-    .api-info {
-        background-color: #2a324a;
-        border-right-color: #4a6baf;
-    }
-    
-    .api-info a {
-        color: #a3b9e5;
-    }
-    
-    .hint {
-        color: #9da7bb;
-    }
-    
-    .progress-container .progress-section {
-        color: #a3b9e5;
-    }
-    
-    .progress-fill.expanding {
-        background-color: #2ecc71;
-    }
-}
-
-.number-input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #e1e7f5;
-    border-radius: 4px;
-    font-family: 'Vazir', sans-serif;
-    font-size: 1rem;
-    color: #2c3e50;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-}
-
-.number-input:focus {
-    border-color: #4a6baf;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(74, 107, 175, 0.1);
-}
-
-.hint {
-    display: block;
-    margin-top: 0.25rem;
-    color: #666;
-    font-size: 0.9rem;
+    transition: color 0.3s ease-in-out;
 }
 
 /* استایل برای نمایش تعداد کلمات مقاله */
 .word-count-info {
     margin-top: 2rem;
     padding: 1rem;
-    background-color: #f8faff;
-    border-radius: 6px;
-    border-right: 3px solid #4a6baf;
+    background: var(--highlight-color);
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
     font-size: 0.95rem;
+    color: var(--text-color);
+    transition: background 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .word-count-info p {
@@ -1157,82 +761,32 @@ button, .btn, [role="button"] {
 }
 
 .word-count-info strong {
-    color: #304878;
+    color: var(--text-color);
     font-weight: bold;
 }
 
 .word-count-info .warning {
-    color: #e74c3c;
+    color: #ffcc00;
     font-weight: bold;
 }
 
 .word-count-info .success {
-    color: #27ae60;
+    color: #2ecc71;
     font-weight: bold;
-}
-
-@media (prefers-color-scheme: dark) {
-    .word-count-info {
-        background-color: #2a324a;
-        border-right-color: #4a6baf;
-    }
-    
-    .word-count-info strong {
-        color: #a3b9e5;
-    }
-    
-    .word-count-info .warning {
-        color: #e74c3c;
-    }
-    
-    .word-count-info .success {
-        color: #2ecc71;
-    }
-}
-
-/* استایل برای بخش اطلاعات تکمیلی مقاله */
-.additional-content {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    padding: 1rem;
-    background-color: #f8f9ff;
-    border-radius: 6px;
-    border-right: 3px solid #304878;
-}
-
-.additional-content h2 {
-    color: #304878;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-}
-
-.additional-content .section-content {
-    font-size: 1.05rem;
-}
-
-@media (prefers-color-scheme: dark) {
-    .additional-content {
-        background-color: #2a334d;
-        border-right-color: #4a6baf;
-    }
-    
-    .additional-content h2 {
-        color: #a3b9e5;
-    }
 }
 
 /* استایل دکمه نصب برنامه */
 .install-btn {
-    background-color: #ffd700;
-    color: #304878;
+    background: var(--install-btn-gradient);
+    color: var(--install-btn-text);
     border: none;
     border-radius: 30px;
     padding: 0.5rem 1.5rem;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    transition: all 0.3s ease-in-out;
     margin-top: 1rem;
     position: relative;
     overflow: hidden;
@@ -1248,12 +802,12 @@ button, .btn, [role="button"] {
     height: 100%;
     background-color: rgba(255, 255, 255, 0.2);
     z-index: -1;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease-in-out;
 }
 
 .install-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-color);
 }
 
 .install-btn:hover:before {
@@ -1262,29 +816,25 @@ button, .btn, [role="button"] {
 
 .install-btn:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-@media (max-width: 768px) {
-    .install-btn {
-        font-size: 0.9rem;
-        padding: 0.4rem 1.2rem;
-    }
+    box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 /* استایل راهنمای نصب iOS */
 .ios-install-tip {
-    background-color: rgba(255, 215, 0, 0.15);
-    border: 1px solid #ffd700;
-    border-radius: 8px;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 16px;
     padding: 0.6rem 1rem;
     margin-top: 0.8rem;
     font-size: 0.9rem;
-    color: #fff;
+    color: var(--text-color);
     max-width: 340px;
     margin-left: auto;
     margin-right: auto;
     animation: pulse 2s infinite;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: color 0.3s ease-in-out;
 }
 
 .ios-install-tip .icon {
@@ -1294,22 +844,58 @@ button, .btn, [role="button"] {
     margin: 0 2px;
 }
 
+/* استایل فیلد عددی */
+.number-input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    background: var(--input-bg);
+    color: var(--input-text);
+    transition: all 0.3s ease-in-out;
+}
+
+.number-input:focus {
+    border-color: var(--input-border);
+    background: var(--highlight-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.hint {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    transition: color 0.3s ease-in-out;
+}
+
+/* بهینه‌سازی برای دستگاه‌ها */
+@media (max-width: 768px) {
+    .theme-toggle-btn {
+        bottom: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .theme-toggle-btn .material-icons {
+        font-size: 20px;
+    }
+
+    /* سایر استایل‌های موجود */
+}
+
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
     }
     70% {
-        box-shadow: 0 0 0 6px rgba(255, 215, 0, 0);
+        box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
     }
     100% {
         box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
-    }
-}
-
-@media (max-width: 768px) {
-    .ios-install-tip {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.8rem;
-        max-width: 300px;
     }
 } 

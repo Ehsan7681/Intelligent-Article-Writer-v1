@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" class="light-mode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مقاله‌نویس هوشمند</title>
+    <!-- افزودن فونت Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- افزودن آیکون‌های Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     
     <!-- Web App Manifest برای PWA -->
@@ -29,10 +33,19 @@
     <meta name="theme-color" content="#4a6fa5">
 </head>
 <body>
+    <!-- دکمه تغییر حالت روشن/تاریک -->
+    <button id="theme-toggle" class="theme-toggle-btn">
+        <span class="material-icons light-icon">dark_mode</span>
+        <span class="material-icons dark-icon">light_mode</span>
+    </button>
+
     <header>
         <h1>مقاله‌نویس هوشمند</h1>
         <p>با استفاده از هوش مصنوعی و الگوبرداری از مقالات نمونه، مقالات حرفه‌ای تولید کنید</p>
-        <button id="installApp" class="btn install-btn" style="display: none;">نصب برنامه</button>
+        <button id="installApp" class="btn install-btn" style="display: none;">
+            <span class="material-icons" style="margin-left: 5px; font-size: 18px;">get_app</span>
+            نصب برنامه
+        </button>
         <div id="iOSInstallTip" class="ios-install-tip" style="display: none;">
             برای نصب در iOS: روی <span class="icon">🔗</span> بزنید و سپس «افزودن به صفحه اصلی» را انتخاب کنید
         </div>
@@ -41,14 +54,15 @@
     <main>
         <div class="container">
             <section class="ai-model-selection">
-                <h2>انتخاب مدل هوش مصنوعی</h2>
+                <h2><span class="material-icons" style="vertical-align: middle; margin-left: 8px;">psychology</span>انتخاب مدل هوش مصنوعی</h2>
                 <div class="model-container">
                     <div class="model-status" id="modelStatus">در حال بارگذاری مدل‌ها...</div>
                     <div class="search-container">
                         <input type="text" id="modelSearch" class="search-input" placeholder="جستجوی مدل...">
+                        <span class="material-icons" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: white; opacity: 0.7;">search</span>
                     </div>
                     <div class="search-history" id="searchHistory">
-                        <h4>جستجوهای اخیر:</h4>
+                        <h4><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">history</span>جستجوهای اخیر:</h4>
                         <div class="history-tags" id="historyTags"></div>
                     </div>
                     <div class="select-container">
@@ -56,22 +70,34 @@
                             <option value="">-- یک مدل انتخاب کنید --</option>
                         </select>
                     </div>
-                    <button id="confirmModel" class="btn primary-btn">تایید مدل</button>
-                    <button id="refreshModels" class="btn secondary-btn">بازخوانی مدل‌ها</button>
+                    <button id="confirmModel" class="btn primary-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">check_circle</span>
+                        تایید مدل
+                    </button>
+                    <button id="refreshModels" class="btn secondary-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">refresh</span>
+                        بازخوانی مدل‌ها
+                    </button>
                 </div>
                 <div class="api-info">
-                    <p>برای دریافت کلید API به <a href="https://openrouter.ai" target="_blank">سایت OpenRouter</a> مراجعه کنید. بعد از ثبت‌نام، از بخش API Keys یک کلید جدید ایجاد کنید و در این قسمت وارد کنید:</p>
+                    <p><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">info</span>برای دریافت کلید API به <a href="https://openrouter.ai" target="_blank">سایت OpenRouter</a> مراجعه کنید. بعد از ثبت‌نام، از بخش API Keys یک کلید جدید ایجاد کنید و در این قسمت وارد کنید:</p>
                     <input type="text" id="apiKey" placeholder="کلید API خود را وارد کنید" class="api-input">
-                    <button id="saveApiKey" class="btn small-btn">ذخیره</button>
+                    <button id="saveApiKey" class="btn small-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 16px;">save</span>
+                        ذخیره
+                    </button>
                 </div>
             </section>
 
             <section class="sample-articles">
-                <h2>بارگذاری نمونه مقالات</h2>
+                <h2><span class="material-icons" style="vertical-align: middle; margin-left: 8px;">upload_file</span>بارگذاری نمونه مقالات</h2>
                 <p>تا ۱۰ نمونه مقاله را بارگذاری کنید (فرمت‌های Word و PDF)</p>
                 <div class="upload-container">
                     <input type="file" id="sampleFiles" multiple accept=".docx,.doc,.pdf" class="file-input">
-                    <label for="sampleFiles" class="file-label">انتخاب فایل‌ها</label>
+                    <label for="sampleFiles" class="file-label">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 20px;">file_upload</span>
+                        انتخاب فایل‌ها
+                    </label>
                     <div id="filesList" class="files-list">
                         <p>فایل‌های انتخاب شده: <span id="filesCount">0</span></p>
                     </div>
@@ -86,23 +112,26 @@
                         </div>
                         <div class="progress-text" id="uploadProgressText">در حال بارگذاری...</div>
                     </div>
-                    <button id="uploadSamples" class="btn primary-btn">بارگذاری فایل‌ها</button>
+                    <button id="uploadSamples" class="btn primary-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">cloud_upload</span>
+                        بارگذاری فایل‌ها
+                    </button>
                 </div>
             </section>
 
             <section class="new-article">
-                <h2>اطلاعات مقاله جدید</h2>
+                <h2><span class="material-icons" style="vertical-align: middle; margin-left: 8px;">article</span>اطلاعات مقاله جدید</h2>
                 <div class="article-info">
                     <div class="form-group">
-                        <label for="articleTopic">موضوع مقاله</label>
+                        <label for="articleTopic"><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">title</span>موضوع مقاله</label>
                         <input type="text" id="articleTopic" placeholder="موضوع مقاله را وارد کنید">
                     </div>
                     <div class="form-group">
-                        <label for="articleKeywords">کلمات کلیدی (با کاما جدا کنید)</label>
+                        <label for="articleKeywords"><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">label</span>کلمات کلیدی (با کاما جدا کنید)</label>
                         <input type="text" id="articleKeywords" placeholder="مثال: هوش مصنوعی، یادگیری ماشین، پردازش زبان طبیعی">
                     </div>
                     <div class="form-group">
-                        <label>زبان مقاله</label>
+                        <label><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">language</span>زبان مقاله</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="language" value="fa" checked> فارسی
@@ -113,7 +142,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>اندازه مقاله</label>
+                        <label><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">format_size</span>اندازه مقاله</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="articleSize" value="short" checked> کوتاه
@@ -127,16 +156,19 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="wordCount">تعداد کلمات (اختیاری)</label>
+                        <label for="wordCount"><span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">format_list_numbered</span>تعداد کلمات (اختیاری)</label>
                         <input type="number" id="wordCount" min="300" max="2000" value="400" class="number-input">
                         <small class="hint">پیش‌فرض: 400 کلمه</small>
                     </div>
-                    <button id="generateArticle" class="btn primary-btn">تولید مقاله</button>
+                    <button id="generateArticle" class="btn primary-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">auto_awesome</span>
+                        تولید مقاله
+                    </button>
                 </div>
             </section>
 
             <section id="article-section">
-                <h2>مقاله تولید شده</h2>
+                <h2><span class="material-icons" style="vertical-align: middle; margin-left: 8px;">description</span>مقاله تولید شده</h2>
                 
                 <div id="generation-progress" class="progress-container" style="display: none;">
                     <div class="progress-bar">
@@ -150,8 +182,14 @@
                 </div>
                 
                 <div class="article-actions">
-                    <button id="copyBtn" class="btn secondary-btn">کپی مقاله</button>
-                    <button id="saveAsWordBtn" class="btn primary-btn">ذخیره به صورت Word</button>
+                    <button id="copyBtn" class="btn secondary-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">content_copy</span>
+                        کپی مقاله
+                    </button>
+                    <button id="saveAsWordBtn" class="btn primary-btn">
+                        <span class="material-icons" style="vertical-align: middle; margin-left: 5px; font-size: 18px;">save_alt</span>
+                        ذخیره به صورت Word
+                    </button>
                 </div>
             </section>
         </div>

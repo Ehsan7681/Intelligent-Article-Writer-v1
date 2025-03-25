@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732">
+  <!-- پس‌زمینه -->
+  <rect width="2732" height="2732" fill="#4a6fa5"/>
+  
+  <!-- لوگوی مرکزی -->
+  <g transform="translate(1116, 1116)">
+    <!-- صفحه مقاله (طرح کاغذ) -->
+    <rect x="-250" y="-300" width="500" height="600" rx="20" fill="#ffffff"/>
+    
+    <!-- خطوط متن (نمادین) -->
+    <rect x="-200" y="-200" width="400" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="-150" width="300" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="-100" width="350" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="-50" width="320" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="0" width="380" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="50" width="360" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="100" width="300" height="20" rx="10" fill="#b0c4de"/>
+    <rect x="-200" y="150" width="340" height="20" rx="10" fill="#b0c4de"/>
+    
+    <!-- نماد هوش مصنوعی (مغز) در گوشه کاغذ -->
+    <circle cx="150" cy="-250" r="60" fill="#ffd700"/>
+    <path d="M150 -280 Q180 -260 150 -240 Q120 -220 150 -200" stroke="#4a6fa5" stroke-width="10" fill="none"/>
+    <path d="M130 -280 Q100 -260 130 -240 Q160 -220 130 -200" stroke="#4a6fa5" stroke-width="10" fill="none"/>
+    
+    <!-- عنوان به فارسی (نمادین) -->
+    <rect x="-200" y="-250" width="280" height="30" rx="15" fill="#4a6fa5"/>
+  </g>
+  
+  <!-- متن -->
+  <text x="1366" y="1800" font-family="Arial, Tahoma" font-size="100" text-anchor="middle" fill="#ffffff">مقاله‌نویس هوشمند</text>
+  <text x="1366" y="1900" font-family="Arial, Tahoma" font-size="60" text-anchor="middle" fill="#ffffff">تولید مقالات حرفه‌ای با هوش مصنوعی</text>
+</svg> 

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- همان محتوای SVG پایه با تغییر اندازه -->
+  <!-- پس‌زمینه -->
+  <rect width="192" height="192" rx="30" fill="#4a6fa5"/>
+  
+  <!-- صفحه مقاله (طرح کاغذ) -->
+  <rect x="45" y="30" width="102" height="132" rx="5" fill="#ffffff"/>
+  
+  <!-- خطوط متن (نمادین) -->
+  <rect x="56" y="52" width="80" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="64" width="56" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="76" width="67" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="88" width="64" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="100" width="75" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="112" width="71" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="124" width="60" height="4" rx="2" fill="#b0c4de"/>
+  <rect x="56" y="136" width="67" height="4" rx="2" fill="#b0c4de"/>
+  
+  <!-- نماد هوش مصنوعی (مغز) در گوشه کاغذ -->
+  <circle cx="120" cy="40" r="12" fill="#ffd700"/>
+  <path d="M120 35 Q126 38 120 41 Q114 44 120 47" stroke="#4a6fa5" stroke-width="2" fill="none"/>
+  <path d="M116 35 Q110 38 116 41 Q122 44 116 47" stroke="#4a6fa5" stroke-width="2" fill="none"/>
+  
+  <!-- عنوان به فارسی (نمادین) -->
+  <rect x="56" y="40" width="52" height="6" rx="3" fill="#4a6fa5"/>
+</svg> 

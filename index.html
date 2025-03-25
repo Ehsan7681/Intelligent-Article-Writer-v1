@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مقاله‌نویس هوشمند</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Web App Manifest برای PWA -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- آیکون‌ها -->
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="icons/icon-base.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.svg">
+    
+    <!-- متاتگ‌های مخصوص iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="مقاله‌نویس">
+    <link rel="apple-touch-startup-image" href="icons/splash.svg">
+    
+    <!-- متاتگ‌های مخصوص ویندوز -->
+    <meta name="msapplication-TileColor" content="#4a6fa5">
+    <meta name="msapplication-TileImage" content="icons/icon-144x144.svg">
+    
+    <!-- متاتگ‌های توضیحات -->
+    <meta name="description" content="با استفاده از هوش مصنوعی و الگوبرداری از مقالات نمونه، مقالات حرفه‌ای تولید کنید">
+    <meta name="theme-color" content="#4a6fa5">
 </head>
 <body>
     <header>
@@ -166,6 +188,17 @@
                 console.error('خطا در بارگذاری اسکریپت:', url);
             };
             document.body.appendChild(script);
+        }
+        
+        // ثبت Service Worker برای قابلیت PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js').then(function(registration) {
+                    console.log('Service Worker با موفقیت ثبت شد:', registration.scope);
+                }).catch(function(error) {
+                    console.log('خطا در ثبت Service Worker:', error);
+                });
+            });
         }
     </script>
 

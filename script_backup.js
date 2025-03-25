@@ -447,7 +447,7 @@ function uploadSamples() {
     }
 }
 
-// تابع تولید مقاله با سیستم گسترش بخش به بخش
+// تابع تولید مقاله بهبود یافته
 async function generateArticle() {
     const apiKey = apiKeyInput.value.trim();
     if (!apiKey) {
@@ -468,13 +468,6 @@ async function generateArticle() {
 
     const keywords = articleKeywordsInput.value.trim();
     const sampleCount = parseInt(sampleCountInput.value) || 0;
-    let wordCount = parseInt(wordCountInput.value) || 400; // تعداد کلمات درخواستی
-    
-    // بررسی محدوده مناسب برای تعداد کلمات
-    if (wordCount < 300 || wordCount > 5000) {
-        alert("تعداد کلمات باید بین 300 تا 5000 کلمه باشد.");
-        return;
-    }
 
     if (sampleCount > 0 && uploadedSamples.length === 0) {
         alert("لطفاً حداقل یک نمونه مقاله بارگذاری کنید.");
@@ -495,85 +488,29 @@ async function generateArticle() {
             samplesText = "نمونه مقالات:\n\n" + usedSamples.join("\n\n----------\n\n");
         }
 
-        // اندازه مقاله براساس انتخاب کاربر
-        const selectedSize = document.querySelector('input[name="articleSize"]:checked').value;
-        let articleLength = "متوسط";
-        
-        switch(selectedSize) {
-            case 'short':
-                articleLength = "کوتاه";
-                break;
-            case 'medium':
-                articleLength = "متوسط";
-                break;
-            case 'long':
-                articleLength = "بلند";
-                break;
-        }
-
-        // درخواست اولیه با ساختاربندی مناسب
-        const initialPrompt = `تو یک متخصص نویسنده مقالات علمی و تخصصی هستی. 
-        لطفاً یک مقاله جامع، یکپارچه و ساختاریافته در مورد "${topic}" بنویس.
+        const prompt = `تو یک متخصص نویسنده مقالات علمی و تخصصی هستی. 
+        لطفاً یک مقاله جامع، یکپارچه و کامل در مورد "${topic}" بنویس.
         ${keywords ? `کلمات کلیدی: ${keywords}` : ""}
         ${samplesText ? `\n\n${samplesText}` : ""}
         
-        مقاله باید دارای ساختار زیر باشد:
-        1. عنوان مقاله (<h1>)
-        2. چکیده (<h2>چکیده</h2> و محتوا در <p>)
-        3. مقدمه (<h2>مقدمه</h2> و محتوا در <p>)
-        4. بدنه اصلی با چندین بخش مجزا (هر بخش با <h2> یا <h3> شروع شود)
-        5. نتیجه‌گیری (<h2>نتیجه‌گیری</h2> و محتوا در <p>)
-        6. منابع (<h2>منابع</h2> و هر منبع در یک <p>)
+        مقاله باید شامل:
+        1. عنوان کامل و گویا
+        2. چکیده کوتاه
+        3. متن اصلی مقاله با پاراگراف‌های مرتبط و پیوسته
+        4. نتیجه‌گیری
+        5. منابع (در صورت لزوم)
         
-        مهم: مقاله را با HTML کامل تولید کن و هر بخش باید در یک <div class="article-section"> قرار گیرد، مثال:
-        
-        <h1>عنوان مقاله</h1>
-        
-        <div class="article-section abstract">
-            <h2>چکیده</h2>
-            <div class="section-content">
-                <p>متن چکیده...</p>
-            </div>
-        </div>
-        
-        <div class="article-section introduction">
-            <h2>مقدمه</h2>
-            <div class="section-content">
-                <p>متن مقدمه...</p>
-                <p>ادامه مقدمه...</p>
-            </div>
-        </div>
-        
-        <div class="article-section">
-            <h2>عنوان بخش اول</h2>
-            <div class="section-content">
-                <p>محتوای بخش اول...</p>
-            </div>
-        </div>
-        
-        <div class="article-section conclusion">
-            <h2>نتیجه‌گیری</h2>
-            <div class="section-content">
-                <p>متن نتیجه‌گیری...</p>
-            </div>
-        </div>
-        
-        <div class="article-section references">
-            <h2>منابع</h2>
-            <div class="section-content">
-                <p>منبع اول...</p>
-                <p>منبع دوم...</p>
-            </div>
-        </div>
-        
-        تعداد کلمات کل مقاله: حدود ${wordCount} کلمه
-        ساختار HTML مناسب برای هر بخش الزامی است.`;
+        نکات مهم:
+        - مقاله یکپارچه و پیوسته باشد، نه بخش‌های جدا از هم
+        - هر پاراگراف به طور منطقی به پاراگراف بعدی متصل باشد
+        - از عنوان‌های فرعی به صورت محدود استفاده کن تا پیوستگی مقاله حفظ شود
+        - فرمت HTML استفاده شود
+        - چکیده در ابتدای مقاله و منابع در انتهای آن قرار گیرد`;
 
         // بروزرسانی نوار پیشرفت
         generationProgressFillEl.style.width = '15%';
         generationProgressTextEl.innerText = 'در حال ارسال درخواست...';
 
-        // درخواست اول API
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -585,10 +522,9 @@ async function generateArticle() {
             body: JSON.stringify({
                 model: selectedModel,
                 messages: [
-                    { role: "user", content: initialPrompt }
+                    { role: "user", content: prompt }
                 ],
-                stream: true,
-                max_tokens: Math.max(wordCount * 2, 2500)
+                stream: true
             })
         });
 
@@ -657,56 +593,70 @@ async function generateArticle() {
             }
         }
         
-        // اصلاح HTML در صورت نیاز
-        let finalHtml = fixArticleHtml(articleHtml);
+        // پردازش نهایی محتوا
+        let finalHtml = articleHtml;
         
-        // به‌روزرسانی محتوای مقاله
+        // بررسی و اصلاح ساختار HTML
+        if (!finalHtml.includes('<h1') && !finalHtml.includes('<h2')) {
+            // اگر تگ‌های HTML صحیح نداشت، محتوا را با ساختار مناسب فرمت‌بندی می‌کنیم
+            const lines = finalHtml.split('\n').filter(line => line.trim());
+            finalHtml = '';
+            
+            // پیدا کردن عنوان
+            let title = lines[0];
+            if (title) {
+                // حذف علامت‌های احتمالی از ابتدای عنوان
+                title = title.replace(/^[#*\s]+/, '');
+                finalHtml += `<h1 class="article-title">${title}</h1>`;
+            }
+            
+            // تشخیص چکیده و بدنه اصلی
+            let abstractFound = false;
+            let bodyContent = '';
+            let conclusionContent = '';
+            let referencesContent = '';
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // تشخیص بخش‌های مختلف
+                if (line.toLowerCase().includes('چکیده') || line.toLowerCase().includes('abstract')) {
+                    abstractFound = true;
+                    finalHtml += `<div class="article-section abstract">
+                        <h2>چکیده</h2>
+                        <div class="section-content">`;
+                    continue;
+                } else if (line.toLowerCase().includes('نتیجه') || line.toLowerCase().includes('جمع‌بندی') || line.toLowerCase().includes('conclusion')) {
+                    if (abstractFound) finalHtml += `</div></div>`;
+                    finalHtml += `<div class="article-section conclusion">
+                        <h2>نتیجه‌گیری</h2>
+                        <div class="section-content">`;
+                    continue;
+                } else if (line.toLowerCase().includes('منابع') || line.toLowerCase().includes('references')) {
+                    if (abstractFound) finalHtml += `</div></div>`;
+                    finalHtml += `<div class="article-section references">
+                        <h2>منابع</h2>
+                        <div class="section-content">`;
+                    continue;
+                }
+                
+                // اضافه کردن محتوا به بخش فعلی
+                if (line) {
+                    if (!line.endsWith('.') && !line.endsWith('؟') && !line.endsWith('!') && 
+                        !line.endsWith('،') && !line.endsWith(':') && !line.endsWith('؛')) {
+                        finalHtml += `<p>${line}</p>`;
+                    } else {
+                        finalHtml += `<p>${line}</p>`;
+                    }
+                }
+            }
+            
+            // بستن آخرین بخش
+            if (abstractFound) finalHtml += `</div></div>`;
+        }
+        
+        // نمایش محتوای نهایی
         articleContentEl.innerHTML = finalHtml;
-        
-        // تقسیم مقاله به بخش‌های مختلف
-        let articleSections = extractArticleSections(articleContentEl);
-        
-        // بررسی تعداد کلمات مقاله
-        let currentWordCount = countArticleWords(articleContentEl);
-        
-        // نمایش وضعیت پیشرفت
-        generationProgressFillEl.style.width = '70%';
-        generationProgressTextEl.innerText = `بررسی تعداد کلمات: ${currentWordCount} از ${wordCount} کلمه`;
-        
-        // اگر تعداد کلمات کمتر از مقدار درخواستی است، بخش‌ها را گسترش می‌دهیم
-        if (currentWordCount < wordCount) {
-            generationProgressFillEl.style.width = '75%';
-            generationProgressTextEl.innerText = `در حال گسترش بخش‌های مقاله...`;
-            
-            // تلاش برای گسترش مقاله تا رسیدن به تعداد کلمات مطلوب
-            await expandArticleToTargetWordCount(
-                articleContentEl, 
-                articleSections, 
-                wordCount, 
-                currentWordCount, 
-                apiKey,
-                topic,
-                keywords
-            );
-            
-            // محاسبه مجدد تعداد کلمات
-            currentWordCount = countArticleWords(articleContentEl);
-        }
-        
-        // اضافه کردن اطلاعات تعداد کلمات
-        const wordCountInfo = document.createElement('div');
-        wordCountInfo.className = 'word-count-info';
-        wordCountInfo.innerHTML = `<p>تعداد کلمات مقاله: <strong>${currentWordCount}</strong> کلمه از <strong>${wordCount}</strong> کلمه درخواستی</p>`;
-        
-        if (currentWordCount < wordCount) {
-            wordCountInfo.innerHTML += `<p class="warning">توجه: علی‌رغم تلاش‌های سیستم، تعداد کلمات مقاله همچنان کمتر از مقدار درخواستی است!</p>
-            <p class="warning">لطفاً مجدداً تلاش کنید یا مدل هوش مصنوعی قوی‌تری انتخاب نمایید.</p>`;
-        } else {
-            const percentMore = Math.round((currentWordCount - wordCount) / wordCount * 100);
-            wordCountInfo.innerHTML += `<p class="success">✓ مقاله با موفقیت تولید شد و <strong>${percentMore}%</strong> بیشتر از تعداد کلمات درخواستی است.</p>`;
-        }
-        
-        articleContentEl.appendChild(wordCountInfo);
         
         // تکمیل نوار پیشرفت
         generationProgressFillEl.style.width = '100%';
@@ -723,405 +673,6 @@ async function generateArticle() {
         generationProgressFillEl.style.width = '100%';
         generationProgressFillEl.style.backgroundColor = '#e74c3c';
         generationProgressTextEl.innerText = 'خطا در تولید مقاله';
-    }
-}
-
-// اصلاح ساختار HTML مقاله در صورت نیاز
-function fixArticleHtml(html) {
-    // بررسی ساختار HTML
-    if (!html.includes('<div class="article-section')) {
-        // ساختار HTML مناسب ندارد، آن را اصلاح می‌کنیم
-        let processedHtml = '';
-        
-        // ایجاد DOM موقت برای تجزیه HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        
-        // یافتن عنوان اصلی
-        let titleEl = tempDiv.querySelector('h1');
-        if (titleEl) {
-            processedHtml += titleEl.outerHTML;
-        } else {
-            // بررسی خط اول برای یافتن عنوان
-            const lines = html.split('\n');
-            for (const line of lines) {
-                if (line.trim() && !line.startsWith('<')) {
-                    processedHtml += `<h1 class="article-title">${line.trim()}</h1>`;
-                    break;
-                }
-            }
-        }
-        
-        // پردازش عناوین و بخش‌ها
-        const headers = tempDiv.querySelectorAll('h2, h3');
-        
-        if (headers.length > 0) {
-            // استفاده از عناوین موجود برای ساختاردهی
-            let currentSection = null;
-            let currentContent = '';
-            
-            // پیمایش همه المان‌ها برای یافتن بخش‌ها
-            Array.from(tempDiv.childNodes).forEach((node, index) => {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    if (node.tagName === 'H2' || node.tagName === 'H3') {
-                        // اگر بخش قبلی وجود داشت، آن را بستیم
-                        if (currentSection) {
-                            processedHtml += `<div class="article-section ${getSectionClass(currentSection)}">
-                                <h2>${currentSection}</h2>
-                                <div class="section-content">${currentContent}</div>
-                            </div>`;
-                        }
-                        
-                        // شروع بخش جدید
-                        currentSection = node.textContent.trim();
-                        currentContent = '';
-                    } else if (currentSection && (node.tagName === 'P' || node.tagName === 'UL' || node.tagName === 'OL')) {
-                        // اضافه کردن محتوا به بخش فعلی
-                        currentContent += node.outerHTML;
-                    } else if (!currentSection && node.tagName === 'P') {
-                        // پاراگراف قبل از اولین عنوان - احتمالاً چکیده
-                        processedHtml += `<div class="article-section abstract">
-                            <h2>چکیده</h2>
-                            <div class="section-content">${node.outerHTML}</div>
-                        </div>`;
-                    }
-                }
-            });
-            
-            // اضافه کردن آخرین بخش
-            if (currentSection) {
-                processedHtml += `<div class="article-section ${getSectionClass(currentSection)}">
-                    <h2>${currentSection}</h2>
-                    <div class="section-content">${currentContent}</div>
-                </div>`;
-            }
-        } else {
-            // بدون عنوان - تقسیم پاراگراف‌ها به بخش‌ها
-            const paragraphs = tempDiv.querySelectorAll('p');
-            
-            if (paragraphs.length === 0) {
-                // تقسیم متن به پاراگراف‌ها
-                const textParts = html.split('\n\n')
-                    .filter(part => part.trim())
-                    .map(part => `<p>${part.trim()}</p>`)
-                    .join('');
-                
-                processedHtml += `<div class="article-section">
-                    <h2>متن مقاله</h2>
-                    <div class="section-content">${textParts}</div>
-                </div>`;
-            } else {
-                // بخش چکیده
-                processedHtml += `<div class="article-section abstract">
-                    <h2>چکیده</h2>
-                    <div class="section-content">${paragraphs[0].outerHTML}</div>
-                </div>`;
-                
-                // بخش متن اصلی
-                let mainContent = '';
-                for (let i = 1; i < paragraphs.length - 1; i++) {
-                    mainContent += paragraphs[i].outerHTML;
-                }
-                
-                processedHtml += `<div class="article-section">
-                    <h2>متن مقاله</h2>
-                    <div class="section-content">${mainContent}</div>
-                </div>`;
-                
-                // بخش نتیجه‌گیری
-                processedHtml += `<div class="article-section conclusion">
-                    <h2>نتیجه‌گیری</h2>
-                    <div class="section-content">${paragraphs[paragraphs.length - 1].outerHTML}</div>
-                </div>`;
-            }
-        }
-        
-        return processedHtml;
-    }
-    
-    return html;
-}
-
-// تعیین کلاس CSS مناسب برای هر بخش
-function getSectionClass(title) {
-    title = title.toLowerCase();
-    if (title.includes('چکیده') || title.includes('abstract')) {
-        return 'abstract';
-    } else if (title.includes('مقدمه') || title.includes('introduction')) {
-        return 'introduction';
-    } else if (title.includes('نتیجه') || title.includes('جمع‌بندی') || title.includes('conclusion')) {
-        return 'conclusion';
-    } else if (title.includes('منابع') || title.includes('references')) {
-        return 'references';
-    }
-    return '';
-}
-
-// استخراج بخش‌های مقاله
-function extractArticleSections(articleElement) {
-    const sections = [];
-    
-    // افزودن عنوان اصلی
-    const title = articleElement.querySelector('h1');
-    if (title) {
-        sections.push({
-            type: 'title',
-            element: title,
-            title: 'عنوان مقاله',
-            content: title.textContent,
-            priority: 0 // اولویت پایین برای گسترش
-        });
-    }
-    
-    // افزودن سایر بخش‌ها
-    const sectionElements = articleElement.querySelectorAll('.article-section');
-    
-    sectionElements.forEach((sectionEl, index) => {
-        const heading = sectionEl.querySelector('h2, h3');
-        const contentEl = sectionEl.querySelector('.section-content');
-        
-        if (heading && contentEl) {
-            const sectionTitle = heading.textContent.trim();
-            const content = contentEl.innerHTML;
-            const wordCount = contentEl.textContent.split(/\s+/).filter(word => word.length > 0).length;
-            
-            // تعیین اولویت بخش برای گسترش
-            let priority = 5; // اولویت متوسط پیش‌فرض
-            
-            // اختصاص اولویت بر اساس نوع بخش
-            if (sectionEl.classList.contains('abstract')) {
-                priority = 1; // اولویت پایین برای چکیده
-            } else if (sectionEl.classList.contains('introduction')) {
-                priority = 3; // اولویت متوسط برای مقدمه
-            } else if (sectionEl.classList.contains('conclusion')) {
-                priority = 3; // اولویت متوسط برای نتیجه‌گیری
-            } else if (sectionEl.classList.contains('references')) {
-                priority = 0; // اولویت پایین برای منابع
-            } else {
-                priority = 10; // اولویت بالا برای بخش‌های اصلی
-            }
-            
-            sections.push({
-                type: 'section',
-                element: sectionEl,
-                title: sectionTitle,
-                content: content,
-                wordCount: wordCount,
-                priority: priority,
-                index: index
-            });
-        }
-    });
-    
-    return sections;
-}
-
-// شمارش تعداد کلمات مقاله
-function countArticleWords(articleElement) {
-    const text = articleElement.textContent || '';
-    // حذف محتوای بخش اطلاعات تعداد کلمات (اگر وجود داشته باشد)
-    const wordCountInfo = articleElement.querySelector('.word-count-info');
-    let wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
-    
-    if (wordCountInfo) {
-        const infoTextLength = wordCountInfo.textContent.split(/\s+/).filter(word => word.length > 0).length;
-        wordCount -= infoTextLength;
-    }
-    
-    return wordCount;
-}
-
-// گسترش مقاله تا رسیدن به تعداد کلمات هدف
-async function expandArticleToTargetWordCount(articleElement, sections, targetWordCount, currentWordCount, apiKey, topic, keywords) {
-    // تعداد کلمات اضافی مورد نیاز
-    let remainingWords = targetWordCount - currentWordCount;
-    
-    // فیلتر کردن بخش‌هایی که می‌توانند گسترش یابند (براساس اولویت)
-    const expandableSections = sections.filter(section => section.priority > 0);
-    
-    if (expandableSections.length === 0) {
-        console.warn('هیچ بخشی برای گسترش یافت نشد');
-        return false;
-    }
-    
-    // مرتب‌سازی بخش‌ها براساس اولویت (نزولی)
-    expandableSections.sort((a, b) => b.priority - a.priority);
-    
-    // حداکثر تلاش برای گسترش
-    const maxAttempts = Math.min(expandableSections.length * 2, 10);
-    let attempts = 0;
-    let isExpanding = false; // پرچم نشان‌دهنده در حال گسترش بودن یک بخش
-    
-    // گسترش بخش‌ها تا زمانی که به تعداد کلمات هدف برسیم یا تلاش‌ها به پایان برسد
-    while ((remainingWords > 0 || isExpanding) && attempts < maxAttempts) {
-        // انتخاب بخش برای گسترش (چرخشی در بین بخش‌ها)
-        const sectionIndex = attempts % expandableSections.length;
-        const sectionToExpand = expandableSections[sectionIndex];
-        
-        // بروزرسانی نوار پیشرفت
-        generationProgressFillEl.style.width = `${75 + (attempts / maxAttempts) * 15}%`;
-        generationProgressTextEl.innerText = `در حال گسترش بخش "${sectionToExpand.title}"...`;
-        
-        // شروع گسترش بخش
-        isExpanding = true;
-        
-        // گسترش بخش فعلی
-        const success = await expandSectionAndReplace(
-            articleElement, 
-            sectionToExpand, 
-            apiKey, 
-            topic,
-            keywords,
-            Math.max(Math.min(remainingWords, 300), 100) // حداقل 100 کلمه اضافه شود، حداکثر 300 کلمه
-        );
-        
-        // پایان گسترش بخش فعلی
-        isExpanding = false;
-        
-        if (success) {
-            // به‌روزرسانی بخش‌ها
-            const updatedSections = extractArticleSections(articleElement);
-            
-            // پیدا کردن بخش گسترش‌یافته
-            const expandedSection = updatedSections.find(s => 
-                s.type === 'section' && s.title === sectionToExpand.title
-            );
-            
-            if (expandedSection) {
-                // محاسبه تفاوت تعداد کلمات
-                const addedWords = expandedSection.wordCount - sectionToExpand.wordCount;
-                
-                if (addedWords > 0) {
-                    // بروزرسانی تعداد کلمات باقیمانده
-                    remainingWords -= addedWords;
-                    
-                    // بروزرسانی لیست بخش‌ها
-                    expandableSections[sectionIndex] = expandedSection;
-                    
-                    console.log(`بخش "${sectionToExpand.title}" با ${addedWords} کلمه گسترش یافت. ${Math.max(0, remainingWords)} کلمه باقی مانده.`);
-                    
-                    // بروزرسانی نوار پیشرفت
-                    const currentWords = targetWordCount - Math.min(remainingWords, 0);
-                    generationProgressTextEl.innerText = `پیشرفت: ${currentWords} از ${targetWordCount} کلمه`;
-                }
-            }
-        }
-        
-        // اگر در مجموع به اندازه کافی کلمه اضافه شده و تعداد تلاش‌ها از نصف حداکثر بیشتر است، کافی است
-        if (remainingWords <= 0 && attempts >= maxAttempts / 2) {
-            break;
-        }
-        
-        attempts++;
-    }
-    
-    return true;
-}
-
-// گسترش یک بخش و جایگزینی آن با نسخه گسترش‌یافته
-async function expandSectionAndReplace(articleElement, section, apiKey, topic, keywords, minAdditionalWords) {
-    try {
-        // ایجاد پرامپت برای گسترش بخش با تأکید بر تکمیل منطقی
-        const expansionPrompt = `لطفاً این بخش با عنوان "${section.title}" از مقاله در مورد "${topic}" را به طور کامل گسترش دهید.
-        ${keywords ? `کلمات کلیدی مقاله: ${keywords}` : ""}
-        
-        محتوای فعلی بخش:
-        ${section.content}
-        
-        دستورالعمل‌های گسترش:
-        1. محتوای این بخش را با جزئیات بیشتر، مثال‌ها، آمار و شواهد غنی‌تر کنید.
-        2. حداقل ${minAdditionalWords} کلمه به این بخش اضافه کنید.
-        3. اطلاعات و ساختار فعلی را حفظ کنید، فقط آن را کامل‌تر و مفصل‌تر نمایید.
-        4. بخش را به صورت منطقی و کامل توسعه دهید و هیچ ایده یا جمله‌ای را نیمه‌تمام رها نکنید.
-        5. ساختار HTML فعلی را حفظ کنید (استفاده از تگ‌های <p> برای پاراگراف‌ها).
-        6. از زبان علمی و رسمی استفاده کنید.
-        7. حتماً این بخش را با یک جمع‌بندی مناسب به پایان برسانید.
-        
-        نکته مهم: مهم نیست که تعداد کلمات کل مقاله از حد مشخص شده فراتر رود، مهم این است که این بخش به صورت منطقی و کامل گسترش یابد و هیچ بخشی نیمه‌تمام نماند.
-        
-        فقط محتوای داخل <div class="section-content"> را پاسخ دهید، نه کل بخش را.
-        پاسخ شما جایگزین محتوای فعلی این بخش خواهد شد.`;
-        
-        // درخواست به API با تعداد توکن بیشتر برای اطمینان از تکمیل
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`,
-                "HTTP-Referer": window.location.href,
-                "X-Title": "Smart Article Writer"
-            },
-            body: JSON.stringify({
-                model: selectedModel,
-                messages: [
-                    { role: "user", content: expansionPrompt }
-                ],
-                max_tokens: Math.max(minAdditionalWords * 3, 1500), // افزایش تعداد توکن برای اطمینان از تکمیل
-                temperature: 0.7 // تنظیم دما برای خلاقیت بیشتر
-            })
-        });
-        
-        if (!response.ok) {
-            console.error(`خطا در گسترش بخش: ${response.status}`);
-            return false;
-        }
-        
-        const data = await response.json();
-        let expandedContent = data.choices[0]?.message?.content || '';
-        
-        // اطمینان از اینکه خروجی شامل تگ‌های HTML است
-        if (!expandedContent.includes('<p>')) {
-            // تبدیل متن ساده به پاراگراف‌های HTML
-            expandedContent = expandedContent
-                .split('\n\n')
-                .filter(p => p.trim())
-                .map(p => `<p>${p.trim()}</p>`)
-                .join('');
-        }
-        
-        // حذف کد‌بلاک‌های احتمالی
-        expandedContent = expandedContent.replace(/```html|```/g, '');
-        
-        // جایگزینی محتوای بخش با محتوای گسترش‌یافته
-        const sectionContentEl = section.element.querySelector('.section-content');
-        if (sectionContentEl) {
-            // ذخیره محتوای قبلی
-            const originalContent = sectionContentEl.innerHTML;
-            
-            // بررسی اینکه آیا پاسخ دریافت شده خالی نیست
-            if (!expandedContent || expandedContent.trim() === '') {
-                console.error('محتوای دریافتی برای گسترش بخش خالی است');
-                return false;
-            }
-            
-            // جایگزینی محتوا
-            sectionContentEl.innerHTML = expandedContent;
-            
-            // بررسی اینکه آیا جایگزینی موفقیت‌آمیز بوده است
-            if (!sectionContentEl.innerHTML || sectionContentEl.innerHTML === '') {
-                console.error('جایگزینی محتوا ناموفق بود، بازگرداندن محتوای اصلی');
-                sectionContentEl.innerHTML = originalContent;
-                return false;
-            }
-            
-            // اطمینان از اینکه بخش با پاراگراف پایان می‌یابد (برای جلوگیری از نیمه‌تمام ماندن)
-            const lastElement = sectionContentEl.lastElementChild;
-            if (lastElement && lastElement.tagName === 'P') {
-                // بررسی آیا آخرین پاراگراف با یک نقطه یا علامت سوال یا علامت تعجب پایان می‌یابد
-                const lastParagraphText = lastElement.textContent.trim();
-                if (!lastParagraphText.endsWith('.') && !lastParagraphText.endsWith('؟') && !lastParagraphText.endsWith('!')) {
-                    // اضافه کردن نقطه به انتهای پاراگراف
-                    lastElement.textContent = lastParagraphText + '.';
-                }
-            }
-            
-            return true;
-        }
-        
-        return false;
-    } catch (error) {
-        console.error('خطا در گسترش بخش:', error);
-        return false;
     }
 }
 

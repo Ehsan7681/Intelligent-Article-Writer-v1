@@ -133,10 +133,56 @@
 
     <footer>
         <p>مقاله‌نویس هوشمند | قدرت گرفته از هوش مصنوعی</p>
+        <p class="developer-info">توسعه‌دهنده: <span class="developer-name">احسان شمسی</span></p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.js"></script>
+    <script>
+        // بررسی وجود کتابخانه‌ها
+        window.checkLibraries = function() {
+            if (typeof window.docx === 'undefined') {
+                console.error('کتابخانه docx.js بارگذاری نشده است.');
+                alert('کتابخانه docx.js بارگذاری نشده است. در حال تلاش مجدد...');
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.js', function() {
+                    console.log('کتابخانه docx.js با موفقیت بارگذاری شد.');
+                });
+            }
+            
+            if (typeof window.saveAs === 'undefined') {
+                console.error('کتابخانه FileSaver.js بارگذاری نشده است.');
+                alert('کتابخانه FileSaver.js بارگذاری نشده است. در حال تلاش مجدد...');
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js', function() {
+                    console.log('کتابخانه FileSaver.js با موفقیت بارگذاری شد.');
+                });
+            }
+        };
+        
+        // تابع کمکی برای بارگذاری اسکریپت‌ها
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            script.onload = callback;
+            script.onerror = function() {
+                console.error('خطا در بارگذاری اسکریپت:', url);
+            };
+            document.body.appendChild(script);
+        }
+    </script>
+
+    <!-- اسکریپت‌های خارجی -->
+    <script src="https://unpkg.com/docx@7.8.2/build/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <!-- اسکریپت اصلی برنامه -->
     <script src="script.js"></script>
+    
+    <script>
+        // بررسی کتابخانه‌ها هنگام بارگذاری صفحه
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.checkLibraries();
+            }, 2000);
+        });
+    </script>
 </body>
 </html> 

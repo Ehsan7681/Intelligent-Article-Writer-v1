@@ -78,12 +78,22 @@ h2 {
 }
 
 footer {
+    background-color: #304878;
+    color: #fff;
     text-align: center;
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     margin-top: 2rem;
+}
+
+.developer-info {
+    margin-top: 0.5rem;
     font-size: 0.9rem;
-    color: #888;
-    background-color: #f1f3f6;
+    color: #e1e7f5;
+}
+
+.developer-name {
+    font-weight: bold;
+    color: #fff;
 }
 
 /* استایل‌های بخش انتخاب مدل */
@@ -499,6 +509,32 @@ footer {
     text-align: center;
     color: #304878;
     font-size: 0.9rem;
+}
+
+/* استایل جدید برای نمایش وضعیت گسترش بخش‌ها */
+.progress-container .progress-section {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #4a6baf;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.progress-container .progress-section.active {
+    font-weight: bold;
+    opacity: 1;
+}
+
+.progress-text-details {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    opacity: 0.8;
+}
+
+/* تغییر رنگ نوار پیشرفت در مرحله گسترش */
+.progress-fill.expanding {
+    background-color: #27ae60;
 }
 
 /* بهینه‌سازی‌های موبایل */
@@ -1071,6 +1107,14 @@ button, .btn, [role="button"] {
     .hint {
         color: #9da7bb;
     }
+    
+    .progress-container .progress-section {
+        color: #a3b9e5;
+    }
+    
+    .progress-fill.expanding {
+        background-color: #2ecc71;
+    }
 }
 
 .number-input {
@@ -1096,4 +1140,83 @@ button, .btn, [role="button"] {
     margin-top: 0.25rem;
     color: #666;
     font-size: 0.9rem;
+}
+
+/* استایل برای نمایش تعداد کلمات مقاله */
+.word-count-info {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f8faff;
+    border-radius: 6px;
+    border-right: 3px solid #4a6baf;
+    font-size: 0.95rem;
+}
+
+.word-count-info p {
+    margin-bottom: 0.5rem;
+}
+
+.word-count-info strong {
+    color: #304878;
+    font-weight: bold;
+}
+
+.word-count-info .warning {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.word-count-info .success {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+@media (prefers-color-scheme: dark) {
+    .word-count-info {
+        background-color: #2a324a;
+        border-right-color: #4a6baf;
+    }
+    
+    .word-count-info strong {
+        color: #a3b9e5;
+    }
+    
+    .word-count-info .warning {
+        color: #e74c3c;
+    }
+    
+    .word-count-info .success {
+        color: #2ecc71;
+    }
+}
+
+/* استایل برای بخش اطلاعات تکمیلی مقاله */
+.additional-content {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9ff;
+    border-radius: 6px;
+    border-right: 3px solid #304878;
+}
+
+.additional-content h2 {
+    color: #304878;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.additional-content .section-content {
+    font-size: 1.05rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .additional-content {
+        background-color: #2a334d;
+        border-right-color: #4a6baf;
+    }
+    
+    .additional-content h2 {
+        color: #a3b9e5;
+    }
 } 

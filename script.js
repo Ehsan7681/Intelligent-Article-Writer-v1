@@ -10,6 +10,7 @@ const MAX_SEARCH_HISTORY = 5; // حداکثر تعداد جستجوهای ذخی
 let deferredPrompt;
 const installButton = document.getElementById('installApp');
 const iOSInstallTip = document.getElementById('iOSInstallTip');
+let refreshButton = null; // دکمه به‌روزرسانی برنامه
 
 // متغیر دکمه تغییر حالت روشن/تاریک
 let themeToggleBtn = document.getElementById('theme-toggle');
@@ -86,10 +87,12 @@ function setupTheme() {
     // بررسی حالت ذخیره شده در localStorage
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.className = savedTheme + '-mode';
+    document.body.className = savedTheme + '-mode';
     
     // اگر دکمه تغییر حالت وجود داشته باشد، رویداد کلیک را تنظیم کنید
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', toggleTheme);
+        console.log('رویداد کلیک برای دکمه تغییر حالت تنظیم شد.');
     }
 }
 
@@ -111,14 +114,19 @@ function toggleTheme() {
     // ذخیره حالت جدید در localStorage
     localStorage.setItem('theme', newTheme.replace('-mode', ''));
     
-    // اعمال حالت جدید
+    // اعمال حالت جدید به همه عناصر اصلی
     document.documentElement.className = newTheme;
+    document.body.className = newTheme;
     
-    // بازخوانی تنظیمات تم
+    // بازخوانی تنظیمات تم با تایمر
     setTimeout(() => {
-        document.body.style.transition = 'none';
+        // مجبور کردن مرورگر به رندر مجدد
+        const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-gradient-start');
+        document.body.style.backgroundColor = themeColor;
         document.body.offsetHeight; // Trigger a reflow
-        document.body.style.transition = 'background 0.3s ease-in-out, color 0.3s ease-in-out';
+        
+        // برگرداندن به حالت عادی با انتقال
+        document.body.style.backgroundColor = '';
         console.log('تم با موفقیت تغییر کرد');
     }, 50);
 }
@@ -1379,13 +1387,16 @@ async function saveAsWord() {
 function checkInstallState() {
     // بررسی آیا اپلیکیشن در حالت standalone اجرا می‌شود یا نه
     const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                               window.navigator.standalone || 
-                               document.referrer.includes('android-app://');
+                              window.navigator.standalone || 
+                              document.referrer.includes('android-app://');
     
     if (installButton) {
         if (isRunningStandalone) {
             // اگر به عنوان PWA اجرا می‌شود، دکمه نصب را پنهان کنید
             installButton.style.display = 'none';
+            
+            // بررسی وجود به‌روزرسانی Service Worker
+            checkForUpdate();
         } else {
             // در غیر این صورت، رویداد نصب را تنظیم کنید
             setupInstallButton();
@@ -1397,10 +1408,18 @@ function checkInstallState() {
     if (isIOS && iOSInstallTip && !isRunningStandalone) {
         iOSInstallTip.style.display = 'block';
     }
+    
+    // شناسایی ویندوز برای بهینه‌سازی نصب
+    const isWindows = navigator.platform.indexOf('Win') > -1;
+    if (isWindows && !isRunningStandalone && installButton) {
+        installButton.innerHTML = '<span class="material-icons" style="margin-left: 5px; font-size: 18px;">get_app</span> نصب روی ویندوز';
+    }
 }
 
 // تنظیم رویداد نصب PWA
 function setupInstallButton() {
+    console.log('آماده‌سازی دکمه نصب...');
+    
     // رویداد قبل از نمایش پرامپت نصب
     window.addEventListener('beforeinstallprompt', (e) => {
         // جلوگیری از نمایش خودکار رابط نصب
@@ -1410,63 +1429,104 @@ function setupInstallButton() {
         deferredPrompt = e;
         
         // نمایش دکمه نصب
-        installButton.style.display = 'inline-block';
+        if (installButton) {
+            installButton.style.display = 'inline-block';
+            console.log('دکمه نصب نمایش داده شد');
+        }
         
         console.log('این برنامه قابل نصب است');
     });
     
     // رویداد کلیک دکمه نصب
-    installButton.addEventListener('click', async () => {
-        if (!deferredPrompt) {
-            console.log('برنامه قبلاً نصب شده یا قابل نصب نیست');
-            
-            // اگر در Safari iOS هستیم، راهنمایی نصب را نشان بده
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIOS) {
-                alert('برای نصب این برنامه در iOS، روی دکمه "اشتراک‌گذاری" در مرورگر ضربه بزنید و گزینه "افزودن به صفحه اصلی" را انتخاب کنید.');
+    if (installButton) {
+        installButton.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                console.log('برنامه قبلاً نصب شده یا قابل نصب نیست');
+                
+                // اگر در کروم ویندوز هستیم، راهنمایی نصب را نشان بده
+                const isWindows = navigator.platform.indexOf('Win') > -1;
+                const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                
+                if (isWindows && isChrome) {
+                    alert('برای نصب برنامه در کروم، روی سه نقطه بالای مرورگر کلیک کرده و سپس گزینه "Install Article Writer..." را انتخاب کنید.');
+                }
+                // اگر در Safari iOS هستیم، راهنمایی نصب را نشان بده
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    alert('برای نصب این برنامه در iOS، روی دکمه "اشتراک‌گذاری" در مرورگر ضربه بزنید و گزینه "افزودن به صفحه اصلی" را انتخاب کنید.');
+                }
+                
+                return;
             }
             
-            return;
-        }
-        
-        // نمایش رابط نصب
-        deferredPrompt.prompt();
-        
-        // منتظر انتخاب کاربر
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`کاربر ${outcome === 'accepted' ? 'پذیرفت' : 'رد کرد'} نصب را`);
-        
-        // تنظیم مجدد deferredPrompt
-        deferredPrompt = null;
-        
-        // پنهان کردن دکمه نصب
-        installButton.style.display = 'none';
-    });
+            // نمایش رابط نصب
+            deferredPrompt.prompt();
+            
+            // منتظر انتخاب کاربر
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`کاربر ${outcome === 'accepted' ? 'پذیرفت' : 'رد کرد'} نصب را`);
+            
+            // تنظیم مجدد deferredPrompt
+            deferredPrompt = null;
+            
+            // پنهان کردن دکمه نصب
+            installButton.style.display = 'none';
+        });
+    }
     
     // وقتی برنامه با موفقیت نصب شد
     window.addEventListener('appinstalled', (evt) => {
         console.log('برنامه با موفقیت نصب شد');
         
         // پنهان کردن دکمه نصب و راهنما
-        installButton.style.display = 'none';
-        iOSInstallTip.style.display = 'none';
+        if (installButton) installButton.style.display = 'none';
+        if (iOSInstallTip) iOSInstallTip.style.display = 'none';
         
         // اعلان به کاربر
         alert('برنامه با موفقیت نصب شد! می‌توانید آن را از صفحه اصلی دستگاه خود اجرا کنید.');
     });
 }
 
-// وقتی برنامه با موفقیت نصب شد
-window.addEventListener('appinstalled', (evt) => {
-    console.log('برنامه با موفقیت نصب شد');
-    
-    // پنهان کردن دکمه نصب و راهنما
-    installButton.style.display = 'none';
-    iOSInstallTip.style.display = 'none';
-    
-    // اعلان به کاربر
-    alert('برنامه با موفقیت نصب شد! می‌توانید آن را از صفحه اصلی دستگاه خود اجرا کنید.');
-});
+// بررسی وجود به‌روزرسانی Service Worker
+function checkForUpdate() {
+    // بررسی وجود Service Worker جدید
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            console.log('یک Service Worker جدید کنترل صفحه را به دست گرفت');
+            
+            // اگر دکمه به‌روزرسانی وجود ندارد، آن را ایجاد کنیم
+            if (!refreshButton && !document.getElementById('refreshApp')) {
+                refreshButton = document.createElement('button');
+                refreshButton.id = 'refreshApp';
+                refreshButton.className = 'btn primary-btn refresh-btn';
+                refreshButton.innerHTML = '<span class="material-icons" style="margin-left: 5px; font-size: 18px;">refresh</span> به‌روزرسانی برنامه';
+                refreshButton.addEventListener('click', () => {
+                    window.location.reload();
+                });
+                
+                // افزودن به هدر
+                const header = document.querySelector('header');
+                if (header) {
+                    header.appendChild(refreshButton);
+                }
+            }
+        });
+        
+        // بررسی وجود نسخه جدید در فواصل زمانی
+        setInterval(() => {
+            navigator.serviceWorker.getRegistration().then(reg => {
+                if (reg) reg.update();
+            });
+        }, 60 * 60 * 1000); // هر یک ساعت
+    }
+}
+
+// تابع برای گفتن به Service Worker که وارد حالت skipWaiting شود
+function skipWaiting() {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+    }
+}
 
 // تنظیم رویدادهای مربوط به تاریخچه جستجو
 function setupSearchHistory() {

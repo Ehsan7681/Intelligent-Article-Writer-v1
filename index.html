@@ -2,35 +2,56 @@
 <html lang="fa" dir="rtl" class="light-mode">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>مقاله‌نویس هوشمند</title>
-    <!-- افزودن فونت Inter -->
+    
+    <!-- متاتگ‌های ضروری برای PWA -->
+    <meta name="description" content="با استفاده از هوش مصنوعی و الگوبرداری از مقالات نمونه، مقالات حرفه‌ای تولید کنید">
+    <meta name="theme-color" content="#4a6fa5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="مقاله‌نویس">
+    <meta name="application-name" content="مقاله‌نویس هوشمند">
+    <meta name="msapplication-TileColor" content="#4a6fa5">
+    <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-tooltip" content="مقاله‌نویس هوشمند - تولید مقالات با هوش مصنوعی">
+    <meta name="msapplication-starturl" content="./index.html">
+    <meta name="msapplication-navbutton-color" content="#4a6fa5">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- فونت و آیکون‌ها -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- افزودن آیکون‌های Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     
     <!-- Web App Manifest برای PWA -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
     
     <!-- آیکون‌ها -->
     <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="icons/icon-48x48.png">
     <link rel="icon" type="image/svg+xml" href="icons/icon-base.svg">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="icons/icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="icons/icon-60x60.png">
+    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#4a6fa5">
+    <link rel="shortcut icon" href="icons/favicon.ico">
+    <meta name="msapplication-square70x70logo" content="icons/icon-70x70.png">
+    <meta name="msapplication-square150x150logo" content="icons/icon-150x150.png">
+    <meta name="msapplication-square310x310logo" content="icons/icon-310x310.png">
+    <meta name="msapplication-wide310x150logo" content="icons/icon-310x150.png">
     
-    <!-- متاتگ‌های مخصوص iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="مقاله‌نویس">
+    <!-- تصاویر ارسال برای iOS -->
     <link rel="apple-touch-startup-image" href="icons/splash.svg">
-    
-    <!-- متاتگ‌های مخصوص ویندوز -->
-    <meta name="msapplication-TileColor" content="#4a6fa5">
-    <meta name="msapplication-TileImage" content="icons/icon-144x144.svg">
-    
-    <!-- متاتگ‌های توضیحات -->
-    <meta name="description" content="با استفاده از هوش مصنوعی و الگوبرداری از مقالات نمونه، مقالات حرفه‌ای تولید کنید">
-    <meta name="theme-color" content="#4a6fa5">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-splash-640x1136.jpg">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="icons/apple-splash-750x1334.jpg">
 </head>
 <body>
     <!-- دکمه تغییر حالت روشن/تاریک -->
@@ -235,7 +256,7 @@
         // ثبت Service Worker برای قابلیت PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('sw.js').then(function(registration) {
+                navigator.serviceWorker.register('./sw.js').then(function(registration) {
                     console.log('Service Worker با موفقیت ثبت شد:', registration.scope);
                 }).catch(function(error) {
                     console.log('خطا در ثبت Service Worker:', error);
@@ -255,7 +276,7 @@
         // بررسی کتابخانه‌ها هنگام بارگذاری صفحه
         window.addEventListener('load', function() {
             setTimeout(function() {
-                window.checkLibraries();
+                window.checkLibraries && window.checkLibraries();
             }, 2000);
         });
     </script>

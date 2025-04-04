@@ -17,7 +17,9 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 /* متغیرهای رنگ برای حالت روشن */
-:root {
+:root,
+html.light-mode,
+body.light-mode {
     --bg-gradient-start: #e8ecf0;
     --bg-gradient-end: #d0d6dd;
     --card-bg: rgba(255, 255, 255, 0.7);
@@ -47,33 +49,41 @@
 }
 
 /* متغیرهای رنگ برای حالت تاریک */
+html.dark-mode,
+body.dark-mode,
 .dark-mode {
-    --bg-gradient-start: #1e2028;
-    --bg-gradient-end: #15171c;
-    --card-bg: rgba(35, 39, 47, 0.7);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --text-color: #e1e6ef;
-    --text-color-light: #f8f9fa;
-    --text-color-secondary: rgba(255, 255, 255, 0.9);
-    --button-primary: linear-gradient(135deg, #304878, #3d5c98);
-    --button-text: #fff;
-    --button-secondary: rgba(255, 255, 255, 0.12);
-    --button-secondary-text: #e1e6ef;
-    --input-bg: rgba(35, 39, 47, 0.7);
-    --input-border: rgba(255, 255, 255, 0.15);
-    --input-text: #e1e6ef;
-    --placeholder-color: rgba(255, 255, 255, 0.5);
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --header-bg: rgba(25, 28, 35, 0.8);
-    --footer-bg: rgba(25, 28, 35, 0.8);
-    --footer-text: #e1e6ef;
-    --divider-color: rgba(255, 255, 255, 0.1);
-    --highlight-color: rgba(255, 255, 255, 0.05);
-    --article-bg: rgba(35, 39, 47, 0.85);
-    --article-text: #e1e6ef;
-    --install-btn-gradient: linear-gradient(135deg, #d4af37, #c09526);
-    --install-btn-text: #15171c;
-    --backdrop-blur: 10px;
+    --bg-gradient-start: #1e2028 !important;
+    --bg-gradient-end: #15171c !important;
+    --card-bg: rgba(35, 39, 47, 0.7) !important;
+    --card-border: rgba(255, 255, 255, 0.1) !important;
+    --text-color: #e1e6ef !important;
+    --text-color-light: #f8f9fa !important;
+    --text-color-secondary: rgba(255, 255, 255, 0.9) !important;
+    --button-primary: linear-gradient(135deg, #304878, #3d5c98) !important;
+    --button-text: #fff !important;
+    --button-secondary: rgba(255, 255, 255, 0.12) !important;
+    --button-secondary-text: #e1e6ef !important;
+    --input-bg: rgba(35, 39, 47, 0.7) !important;
+    --input-border: rgba(255, 255, 255, 0.15) !important;
+    --input-text: #e1e6ef !important;
+    --placeholder-color: rgba(255, 255, 255, 0.5) !important;
+    --shadow-color: rgba(0, 0, 0, 0.3) !important;
+    --header-bg: rgba(25, 28, 35, 0.8) !important;
+    --footer-bg: rgba(25, 28, 35, 0.8) !important;
+    --footer-text: #e1e6ef !important;
+    --divider-color: rgba(255, 255, 255, 0.1) !important;
+    --highlight-color: rgba(255, 255, 255, 0.05) !important;
+    --article-bg: rgba(35, 39, 47, 0.85) !important;
+    --article-text: #e1e6ef !important;
+    --install-btn-gradient: linear-gradient(135deg, #d4af37, #c09526) !important;
+    --install-btn-text: #15171c !important;
+    --backdrop-blur: 10px !important;
+}
+
+/* Force dark mode for body */
+.dark-mode body {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end)) !important;
+    color: var(--text-color) !important;
 }
 
 /* استایل برای کنترل مقیاس ویوپورت در موبایل */
@@ -898,4 +908,47 @@ footer {
     100% {
         box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
     }
+}
+
+/* استایل دکمه به‌روزرسانی برنامه */
+.refresh-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--button-primary);
+    color: var(--button-text);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    animation: pulse 2s infinite;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+}
+
+.refresh-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+@media (max-width: 768px) {
+    .refresh-btn {
+        top: 5px;
+        right: 5px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .theme-toggle-btn {
+        bottom: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .theme-toggle-btn .material-icons {
+        font-size: 20px;
+    }
+
+    /* سایر استایل‌های موجود */
 } 
